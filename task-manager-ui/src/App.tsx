@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from "react";
+import type {Task} from "./types";
+import { getTasks, createTask, markTaskDone } from "./api";
+
+const App: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [title, setTitle] = useState("");
+
+  const loadTasks = async () => {
+    const res = await getTasks();
+    setTasks(res.data);
+  };
+
+  const handleAdd = async () => {
+    if (!title.trim()) return;
+    await createTask(title);
+    setTitle("");
+    await loadTasks();
+  };
+
+  const handleDone = async (task: Task) => {
+    await markTaskDone(task.id);
+    await loadTasks();
+  };
+
+  useEffect(() => {
+    loadTasks();
+  }, [tasks]);
+
+  return (
+      <div style={{ padding: 20, fontFamily: "Arial" }}>
+        <h2>Task Manager</h2>
+
+        <div>
+          <input
+              placeholder="Task title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+          />
+          <button onClick={handleAdd}>Add</button>
+        </div>
+
+        <ul>
+          {tasks.map((task) => (
+              <li key={task.id} style={{ marginTop: 10 }}>
+                <b>{task.title}</b> - {task.status}
+                {task.status !== "DONE" && (
+                    <button onClick={() => handleDone(task)} style={{ marginLeft: 10 }}>
+                      Mark Done
+                    </button>
+                )}
+              </li>
+          ))}
+        </ul>
+      </div>
+  );
+};
+
+export default App;
