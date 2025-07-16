@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {Task} from "./types";
+import type {Task} from "../types/types.ts";
 
 const API_URL = "http://localhost:8080/tasks";
 
