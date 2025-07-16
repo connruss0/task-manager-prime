@@ -12,7 +12,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the Spring Boot app
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Stage 2: Slim Java 22 runtime
 FROM eclipse-temurin:22-jdk-alpine

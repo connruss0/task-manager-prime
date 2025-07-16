@@ -7,6 +7,13 @@ import java.util.*;
 
 @Repository
 public class TaskRepository {
+    /* The reason that I am using a HashMap here is to simulate a database.
+       In a real-world application, this would be replaced with actual database operations.
+       I have utilized a simple HashMap here to make it easier to run the application without needing a database setup.
+       This is not a production-ready solution, but it serves well for demonstration and testing purposes.
+       It would be simple to add a database to the docker container and pull the data from there instead of using a HashMap.
+    */
+
     private final Map<UUID, Task> storage = new HashMap<>();
 
     public List<Task> findAllTasks() {
