@@ -1,9 +1,7 @@
 # Java Spring Boot Backend Code for Prime Task Manager Coding Challenge
 
 # How to Run, Build, and Access Java Spring REST API
-1. Clone repo through the many ways of cloning a repo to local enviornment
-2. Navigate to the the directory where you have cloned the repo via command line/terminal
-3. Ensure that you have Docker Desktop installed
+
 4. Run the following command to build the backend image -> "docker build -t task-manager ."
 5. After building the image, run the following command to run the image -> "docker run -p 8080:8080 task-manager"
 
@@ -21,3 +19,13 @@ If you want to run tests via Maven command line follow the directions below:
 1. Ensure Maven is installed on your system
 2. Run "mvn test" in the task-manager directory that contains the Java Spring Boot code
 
+# Task Manager UI
+This repo contains code for the purposes of the Prime coding challenge
+
+# How To Build, Run, and Access Frontend via Web Browser
+1. Clone repo through the many ways of cloning a repo to local enviornment
+2. Navigate to the the directory where you have cloned the repo via command line/terminal
+3. Ensure that you have Docker Desktop installed
+4. Run the following command to build the frontend image -> "docker build -t task-manager-ui ."
+5. After building the image, run the following command to run the image -> "docker run -p 5173:80 task-manager-ui"
+6. Make sure that the image is running successfully by visiting "http://localhost:5173/" in your prefered web browser
