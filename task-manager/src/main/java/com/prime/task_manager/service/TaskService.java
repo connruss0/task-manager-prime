@@ -10,36 +10,39 @@ import java.util.UUID;
 
 @Service
 public class TaskService {
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository repository) {
-        this.repository = repository;
-    }
-
-    public Task createTask(Task task) {
-        return repository.saveTask(task);
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
     public List<Task> getAllTasks() {
-        return repository.findAllTasks();
+        return taskRepository.findAll();
     }
 
     public Task getTaskById(UUID id) {
-        return repository.findTaskById(id)
+        return taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
     }
 
-    public Task updateTask(UUID id, Task newTask) {
-        Task existing = repository.findTaskById(id)
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    public Task updateTask(UUID id, Task updatedTask) {
+        Task existing = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
-        existing.setTitle(newTask.getTitle());
-        existing.setDescription(newTask.getDescription());
-        existing.setStatus(newTask.getStatus());
-        return repository.saveTask(existing);
+        existing.setTitle(updatedTask.getTitle());
+        existing.setDescription(updatedTask.getDescription());
+        existing.setStatus(updatedTask.getStatus());
+        return taskRepository.save(existing);
     }
 
     public void deleteTask(UUID id) {
-        if (!repository.doesTaskExist(id)) throw new TaskNotFoundException(id);
-        repository.deleteTask(id);
+        if (!taskRepository.existsById(id)) {
+            throw new TaskNotFoundException(id);
+        }
+        taskRepository.deleteById(id);
     }
 }
+

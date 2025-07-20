@@ -7,68 +7,119 @@ import com.prime.task_manager.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class TaskServiceTest {
-    private TaskService service;
+
+    private TaskRepository taskRepository;
+    private TaskService taskService;
 
     @BeforeEach
     void setup() {
-        service = new TaskService(new TaskRepository());
+        taskRepository = mock(TaskRepository.class);
+        taskService = new TaskService(taskRepository);
     }
 
     @Test
-    void createAndRetrieveTask() {
-        Task task = new Task();
-        task.setTitle("Test");
-        Task saved = service.createTask(task);
-        assertEquals("Test", service.getAllTasks().getFirst().getTitle());
+    void shouldReturnAllTasks() {
+        Task task1 = new Task();
+        Task task2 = new Task();
+        when(taskRepository.findAll()).thenReturn(List.of(task1, task2));
+
+        List<Task> tasks = taskService.getAllTasks();
+
+        assertEquals(2, tasks.size());
+        verify(taskRepository, times(1)).findAll();
     }
 
     @Test
-    void updateTaskSuccessfully() {
+    void shouldReturnTaskById() {
+        UUID id = UUID.randomUUID();
         Task task = new Task();
-        task.setTitle("Original");
-        Task saved = service.createTask(task);
+        task.setId(id);
+        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
+
+        Task result = taskService.getTaskById(id);
+
+        assertEquals(id, result.getId());
+        verify(taskRepository).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskNotFound() {
+        UUID id = UUID.randomUUID();
+        when(taskRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(TaskNotFoundException.class, () -> taskService.getTaskById(id));
+        verify(taskRepository).findById(id);
+    }
+
+    @Test
+    void shouldCreateTask() {
+        Task task = new Task();
+        task.setTitle("Write Tests");
+
+        when(taskRepository.save(task)).thenReturn(task);
+
+        Task saved = taskService.createTask(task);
+
+        assertEquals("Write Tests", saved.getTitle());
+        verify(taskRepository).save(task);
+    }
+
+    @Test
+    void shouldUpdateTask() {
+        UUID id = UUID.randomUUID();
+        Task existing = new Task();
+        existing.setId(id);
+        existing.setTitle("Old Title");
 
         Task updated = new Task();
-        updated.setTitle("Updated");
-        updated.setDescription("Updated description");
+        updated.setTitle("New Title");
+        updated.setDescription("Updated Desc");
         updated.setStatus(TaskStatus.IN_PROGRESS);
 
-        Task result = service.updateTask(saved.getId(), updated);
+        when(taskRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertEquals("Updated", result.getTitle());
-        assertEquals("Updated description", result.getDescription());
+        Task result = taskService.updateTask(id, updated);
+
+        assertEquals("New Title", result.getTitle());
+        assertEquals("Updated Desc", result.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, result.getStatus());
+        verify(taskRepository).findById(id);
+        verify(taskRepository).save(existing);
     }
 
     @Test
-    void deleteTaskSuccessfully() {
-        Task task = new Task();
-        task.setTitle("To be deleted");
-        Task saved = service.createTask(task);
-
-        service.deleteTask(saved.getId());
-
-        assertTrue(service.getAllTasks().isEmpty());
-    }
-
-    @Test
-    void updateNonExistentTaskThrowsException() {
-        UUID fakeId = UUID.randomUUID();
+    void shouldThrowWhenUpdatingNonExistentTask() {
+        UUID id = UUID.randomUUID();
         Task updated = new Task();
-        updated.setTitle("Should fail");
-        updated.setStatus(TaskStatus.TODO);
+        when(taskRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(TaskNotFoundException.class, () -> service.updateTask(fakeId, updated));
+        assertThrows(TaskNotFoundException.class, () -> taskService.updateTask(id, updated));
     }
 
     @Test
-    void deleteNonExistentTaskThrowsException() {
-        UUID fakeId = UUID.randomUUID();
-        assertThrows(TaskNotFoundException.class, () -> service.deleteTask(fakeId));
+    void shouldDeleteTaskById() {
+        UUID id = UUID.randomUUID();
+        when(taskRepository.existsById(id)).thenReturn(true);
+
+        taskService.deleteTask(id);
+
+        verify(taskRepository).existsById(id);
+        verify(taskRepository).deleteById(id);
+    }
+
+    @Test
+    void shouldThrowWhenDeletingNonExistentTask() {
+        UUID id = UUID.randomUUID();
+        when(taskRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(TaskNotFoundException.class, () -> taskService.deleteTask(id));
+        verify(taskRepository, never()).deleteById(id);
     }
 }

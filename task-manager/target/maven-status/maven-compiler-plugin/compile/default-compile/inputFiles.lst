@@ -1,8 +1,0 @@
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/TaskManagerApplication.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/config/CorsConfig.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/controller/TaskController.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/exception/TaskNotFoundException.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/model/Task.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/model/TaskStatus.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/repository/TaskRepository.java
-/Users/connor/IdeaProjects/task-manager/task-manager/src/main/java/com/prime/task_manager/service/TaskService.java
