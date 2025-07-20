@@ -4,7 +4,7 @@
 1. Clone the repository
 2. Ensure that docker desktop is installed and running
 3. Run "docker-compose up --build" in a terminal to run tests, build, and start the application
-4. The backend can now be accessed via postman and the ui connected to a backend database can be accessed via "localhost:5173"
+4. The backend can now be accessed via postman and the ui connected to a backend database can be accessed via "http://localhost:5173"
 
 # How to Test Application - Manual
 1. Download Postman to test backend code or make sure the frontend code is running to test
