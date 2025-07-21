@@ -11,7 +11,7 @@ export const createTask = (title: string) =>
     axios.post<Task>(API_URL, { title });
 
 export const markTaskDone = (id: string) =>
-    getTask(id).then(task => {
+    getTask(id).then((task: { data: Task }) => {
         axios.put(`${API_URL}/${id}`,
             {
                 title: task.data.title,
