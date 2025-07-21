@@ -15,12 +15,10 @@ export const TaskManager = () => {
         if (!title.trim()) return;
         await createTask(title);
         setTitle("");
-        await loadTasks();
     };
 
     const handleDone = async (task: Task) => {
         await markTaskDone(task.id);
-        await loadTasks();
     };
 
     useEffect(() => {
