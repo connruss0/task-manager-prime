@@ -14,8 +14,7 @@ export const markTaskDone = (id: string) =>
     getTask(id).then((task: { data: Task }) => {
         axios.put(`${API_URL}/${id}`,
             {
-                title: task.data.title,
-                description: task.data.description,
+                ...task,
                 status: "DONE"
             });
     });
