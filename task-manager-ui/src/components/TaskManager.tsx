@@ -25,7 +25,7 @@ export const TaskManager = () => {
 
     useEffect(() => {
         loadTasks();
-    }, [tasks]);
+    }, []);
 
     return (
         <div>
